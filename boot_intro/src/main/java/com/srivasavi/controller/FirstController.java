@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srivasavi.dto.User;
 import com.srivasavi.repository.FirstRepository;
+import com.srivasavi.service.FirstService;
 
 @RestController
 public class FirstController {
+	
+//	@Autowired
+//	FirstRepository firstRepository;
+	
+	@Autowired
+	FirstService firstService;
+
+	
+//	FirstRepository firstRepository = new FirstRepository();
 	
 	public FirstController() {
 		System.out.println("insdie First No-Arg Constructor...");
@@ -61,9 +72,9 @@ public class FirstController {
 		
 		System.out.println("The userid is "+userId);
 		
-		FirstRepository firstRepository = new FirstRepository();
+//		FirstRepository firstRepository = new FirstRepository();
 		
-		User user = firstRepository.findUserById(userId);
+		User user = firstService.findUser(userId);
 		
 		return user;
 		
@@ -105,9 +116,7 @@ public class FirstController {
 	public String registerJson( @RequestBody User user) throws Exception {
 		System.out.println(user.getUsername()+", "+user.getPassword());
 		
-		FirstRepository firstRepository = new FirstRepository();
-		
-		firstRepository.saveUser(user);
+		firstService.register(user);
 		
 		return "Registration Successfull";
 	}
