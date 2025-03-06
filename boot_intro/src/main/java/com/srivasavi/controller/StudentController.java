@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.srivasavi.dto.Student;
 import com.srivasavi.service.StudentService;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class StudentController {
 	
@@ -20,10 +22,14 @@ public class StudentController {
 	StudentService studentService;
 	
 	@PostMapping("/create")
-	public String register(@RequestBody Student student) {
+	public String register(@RequestBody @Valid Student student) {
 		
 		System.out.println(student.getStudentId()+", "+student.getName());
 		
+//		if( student.getPassword().length() < 9) {
+//			return "Password length should not be less than 9";
+//		}
+//		
 		studentService.create(student);
 		
 		return "Registration Successful";
