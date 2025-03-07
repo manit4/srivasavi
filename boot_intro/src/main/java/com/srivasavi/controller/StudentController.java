@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,15 +26,20 @@ public class StudentController {
 	@Autowired
 	StudentService studentService;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@PostMapping("/create")
 	public String register(@RequestBody @Valid Student student) {
 		
 		System.out.println(student.getStudentId()+", "+student.getName());
 		
-//		if( student.getPassword().length() < 9) {
-//			return "Password length should not be less than 9";
-//		}
-//		
+		String planePassword = student.getPassword();
+		
+		String encodedPassword = passwordEncoder.encode(planePassword);
+		
+		student.setPassword(encodedPassword);
+		
 		studentService.create(student);
 		
 		return "Registration Successful";
