@@ -1,6 +1,5 @@
 package com.srivasavi.dto;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -15,12 +14,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
+public class Address {
+	
 	@Id
-	private String username;
-	private String password;
-	private String name;
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Address address;
+	private String addressId;
+	private String city;
+	@OneToOne
+	private User user;
+
 }

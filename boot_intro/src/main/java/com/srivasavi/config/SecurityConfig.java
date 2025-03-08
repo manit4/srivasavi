@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/student/create").permitAll()
 				.antMatchers("/student/allStudents").hasRole("EMPLOYEE")
 				.antMatchers("/student/getByName/**", "/public/firstMessage").hasRole("ADMIN")
-				.antMatchers("/token").permitAll()
+				.antMatchers("/token", "/user/**").permitAll()
 				//.antMatchers("/student/*").hasRole("Admin")
 				.anyRequest().authenticated().and()//.httpBasic();
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

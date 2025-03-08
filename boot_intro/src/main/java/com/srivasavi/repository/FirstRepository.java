@@ -53,7 +53,7 @@ public class FirstRepository {
 			
 			System.out.println(username+", "+password+", "+name);
 			
-			user = new User(username, password, name);
+			//user = new User(username, password, name);
 		}
 		
 		return user;

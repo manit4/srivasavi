@@ -60,11 +60,11 @@ public class FirstController {
 		 * user.setName("Valni");
 		 */
 		
-		User user1 = new User("val@123", "123", "Valni");
-		User user2 = new User("pra@123", "234", "Prasanna");
+//		User user1 = new User("val@123", "123", "Valni");
+//		User user2 = new User("pra@123", "234", "Prasanna");
 		
 		List<User> users = new ArrayList<>();
-		users.add(user1);    users.add(user2);
+//		users.add(user1);    users.add(user2);
 		
 		return users;
 	}
