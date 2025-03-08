@@ -3,19 +3,25 @@ package com.srivasavi.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.srivasavi.helper.JWTAuthenticationFilter;
 import com.srivasavi.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	JWTAuthenticationFilter authenticationFilter;
 	
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
@@ -27,17 +33,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().cors().disable()
 		.authorizeRequests()			
 				//.antMatchers("/firstMessage", "/secondMessage", "/allUsers").permitAll()
-				.antMatchers("/public/*", "/student/create").permitAll()
-				.antMatchers("student/allStudents").hasRole("Employee")
+				.antMatchers("/student/create").permitAll()
+				.antMatchers("/student/allStudents").hasRole("EMPLOYEE")
+				.antMatchers("/student/getByName/**", "/public/firstMessage").hasRole("ADMIN")
+				.antMatchers("/token").permitAll()
 				//.antMatchers("/student/*").hasRole("Admin")
-				.anyRequest().authenticated().and().httpBasic();
+				.anyRequest().authenticated().and()//.httpBasic();
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 	}
 
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		System.out.println("configure()");
-//		auth.inMemoryAuthentication().withUser("xi").password(passwordEncoder().encode("123")).roles("Admin");
-//		auth.inMemoryAuthentication().withUser("jing").password(passwordEncoder().encode("234")).roles("Employee");
+//		auth.inMemoryAuthentication().withUser("xi").password(passwordEncoder().encode("123")).roles("ADMIN");
+//		auth.inMemoryAuthentication().withUser("jing").password(passwordEncoder().encode("234")).roles("EMPLOYEE");
 
 		auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
 		
@@ -54,6 +64,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		System.out.println("passwordEncoder()");
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public AuthenticationManager authenticationManager() throws Exception {
+		
+		return super.authenticationManager();
 	}
 
 }
